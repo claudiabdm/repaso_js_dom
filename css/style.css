@@ -3,27 +3,33 @@ body {
     height: 100%;
     background: #f2f2f2;
 }
+
+button {
+    cursor: pointer;
+}
+
 .main-wrapper {
     text-align: center;
 }
+
 ul {
-    width: 400px;
     margin: 30px auto;
 }
+
 .task {
-    color: white;
-    font-weight: bold;
     background: red;
+    color: white;
     list-style: none;
     margin-top: 1px;
-    width: 400px;
+    width: 600px;
     padding: 5px;
     border-radius: 5px;
 }
+
 .task--done {
     background: green;
 }
+
 .action-btn {
     float: right;
 }
-
