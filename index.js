@@ -7,15 +7,17 @@ function pintar() {
     const ul = document.getElementById('list');
 
     // makes ul list empty by deleting children
-    while (ul.lastChild) {
-        ul.removeChild(ul.lastChild);
+    while (ul.firstChild) {
+        ul.removeChild(ul.firstChild);
     }
 
     // paints tasks
     toDo.forEach(elem => {
         const li = document.createElement('li');
-        const text = document.createTextNode(`${elem.text} ${elem.end.locale('es').format('LL')} ${elem.end.diff(moment(), 'days')} días`);
+        const text = document.createTextNode(`${elem.text}`);
+        const date = document.createTextNode(`${elem.end.locale('es').format('LL')} ${elem.end.diff(moment(), 'days')} días`);
         li.appendChild(text);
+        li.appendChild(date);
         li.appendChild(addEditBtnElement());
         li.appendChild(addDeleteBtnElement());
         li.appendChild(addDoneBtnElement());
@@ -81,6 +83,11 @@ function addSaveBtnElement() {
 }
 
 function deleteElement(e) {
+    // Remove from array
+    const liTxt = e.currentTarget.parentElement.firstChild.textContent;
+    const idxLi = toDo.findIndex(elem => elem.text === liTxt);
+    toDo.splice(idxLi, 1);
+    // Remove from DOM
     list.removeChild(e.currentTarget.parentElement);
 }
 
