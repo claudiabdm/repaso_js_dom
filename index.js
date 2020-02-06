@@ -186,10 +186,10 @@ defaultBtn.addEventListener('click', sortDefault);
 
 function filterTxt(e) {
     const input = e.currentTarget.value;
-    toDo.forEach( elem => {
+    toDo.forEach(elem => {
         const text = elem.text.replace(/^\s+/g, ''); //remove all white spaces at start
         const regex = new RegExp(`^${input}`, 'g');
-        if(!regex.test(text)) {
+        if (!regex.test(text)) {
             elem.visible = false;
         } else {
             elem.visible = true;
@@ -200,3 +200,21 @@ function filterTxt(e) {
 
 const inputFilter = document.getElementById('textFilter');
 inputFilter.addEventListener('keyup', filterTxt);
+
+
+function filterDays(e) {
+    const input = e.currentTarget.value;
+    toDo.forEach(elem => {
+        const daysLeft = elem.end.diff(moment(), 'days').toString();
+        if (input === daysLeft) {
+            elem.visible = true;
+        } else {
+            elem.visible = false;
+        }
+    })
+    input === '' ? pintar(toDo) : pintar(toDo.filter(elem => elem.visible === true)); //
+
+}
+
+const daysFilter = document.getElementById('dateFilter');
+daysFilter.addEventListener('keyup', filterDays);
