@@ -14,10 +14,12 @@ function pintar() {
     // paints tasks
     toDo.forEach(elem => {
         const li = document.createElement('li');
-        const text = document.createTextNode(`${elem.text}`);
-        const date = document.createTextNode(`${elem.end.locale('es').format('LL')} ${elem.end.diff(moment(), 'days')} días`);
+        const text = document.createTextNode(`${elem.text} `);
+        const date = document.createTextNode(`${elem.end.locale('es').format('LL')} `);
+        const days = document.createTextNode(`${elem.end.diff(moment(), 'days')} días`);
         li.appendChild(text);
         li.appendChild(date);
+        li.appendChild(days);
         li.appendChild(addEditBtnElement());
         li.appendChild(addDeleteBtnElement());
         li.appendChild(addDoneBtnElement());
@@ -25,8 +27,6 @@ function pintar() {
         ul.appendChild(li);
     })
 }
-
-
 
 // BUTTONS TASK ACTIONS
 function addToDo() {
@@ -132,7 +132,6 @@ function addTodoOnEnter(e) {
 input.addEventListener('keydown', addTodoOnEnter);
 
 // BUTTONS SORT TASK
-
 
 // Alphabetic order
 function sortAbc(e) {
