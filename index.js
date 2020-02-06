@@ -132,14 +132,6 @@ function saveElement(e) {
     li.removeChild(btnSave);
 }
 
-function addTodoOnEnter(e) {
-    if (e.keyCode === 13) {
-        addToDo();
-    }
-}
-
-input.addEventListener('keydown', addTodoOnEnter);
-
 // BUTTONS SORT TASK
 
 // Alphabetic order
@@ -212,9 +204,22 @@ function filterDays(e) {
             elem.visible = false;
         }
     })
-    input === '' ? pintar(toDo) : pintar(toDo.filter(elem => elem.visible === true)); //
+    input === '' ? pintar(toDo) : pintar(toDo.filter(elem => elem.visible === true));
 
 }
 
 const daysFilter = document.getElementById('dateFilter');
 daysFilter.addEventListener('keyup', filterDays);
+
+// PRESS KEY
+
+function addTodoOnEnter(e) {
+    if (e.keyCode === 13) {
+        addToDo();
+    }
+}
+
+document.getElementById('input').addEventListener('keydown', addTodoOnEnter);
+document.getElementById('date').addEventListener('keydown', addTodoOnEnter);
+document.getElementById('textFilter').addEventListener('keydown', addTodoOnEnter);
+document.getElementById('dateFilter').addEventListener('keydown', addTodoOnEnter);
