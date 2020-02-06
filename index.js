@@ -1,10 +1,9 @@
-var arrTasks = [];
+// var arrTasks = []; Esto era para la Iteración 1
 var toDo = [];
+const ul = document.getElementById('list');
 
 // PAINT LIST
 function pintar(arr) {
-
-    const ul = document.getElementById('list');
 
     // makes ul list empty by deleting children
     while (ul.firstChild) {
@@ -15,8 +14,8 @@ function pintar(arr) {
     arr.forEach(elem => {
         const li = document.createElement('li');
         const text = document.createTextNode(` ${elem.text} `);
-        const date = document.createTextNode(` ${elem.end.locale('es').format('LL')} `);
-        const days = document.createTextNode(` ${elem.end.diff(moment(), 'days')} días`);
+        const date = document.createTextNode(` ${elem.end.locale('es').format('LLLL')} `);
+        const days = document.createTextNode(` ${elem.end.diff(moment(), 'minutes')} días`);
         li.appendChild(text);
         li.appendChild(date);
         li.appendChild(days);
@@ -24,6 +23,7 @@ function pintar(arr) {
         li.appendChild(addDeleteBtnElement());
         li.appendChild(addDoneBtnElement());
         li.classList.add("task");
+        li.setAttribute("data-list-id", elem.id);
         ul.appendChild(li);
     })
 }
@@ -84,9 +84,9 @@ function addSaveBtnElement() {
 
 function deleteElement(e) {
     // Remove from array
-    const liTxt = e.currentTarget.parentElement.firstChild.textContent;
-    const idxLi = toDo.findIndex(elem => elem.text === liTxt);
-    toDo.splice(idxLi, 1);
+    const idLi = e.currentTarget.parentElement.getAttribute('data-list-id'); // gets list id from DOM element (see pintar())
+    const idxLi = toDo.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
+    toDo.splice(idxLi, 1); //remove element in that index
     // Remove from DOM
     list.removeChild(e.currentTarget.parentElement);
 }
@@ -108,7 +108,6 @@ function editElement(e) {
     li.removeChild(btnEdit);
     li.prepend(btnSave);
     li.prepend(input);
-    console.log('childNodes', li.childNodes);
 }
 
 function saveElement(e) {
@@ -147,7 +146,7 @@ function sortAbc(e) {
         toDo.sort((a, b) => a.text < b.text);
         abcBtn.textContent = '(A-Z)';
     }
-    pintar()
+    pintar(toDo)
 }
 
 const abcBtn = document.getElementById('textOrderAbc');
@@ -162,7 +161,7 @@ function sortDaysLeft(e) {
         toDo.sort((a, b) => b.end - a.end);
         daysLeftBtn.textContent = 'Prioritarios primero';
     }
-    pintar()
+    pintar(toDo)
 }
 
 const daysLeftBtn = document.getElementById('textOrderDays');
@@ -172,8 +171,29 @@ daysLeftBtn.addEventListener('click', sortDaysLeft);
 // Default order
 function sortDefault(e) {
     toDo.sort((a, b) => a.id - b.id);
-    pintar()
+    pintar(toDo)
 }
 
 const defaultBtn = document.getElementById('textOrderId');
 defaultBtn.addEventListener('click', sortDefault);
+
+// FILTER TASKS
+
+function filterTxt(e) {
+    const input = e.currentTarget.value;
+    toDo.forEach( elem => {
+        const text = elem.text;
+        const regex = new RegExp("^" + input, 'g');
+        console.log(regex)
+        console.log(input)
+        if(!regex.test(text)) {
+            elem.visible = false;
+        } else {
+            elem.visible = true;
+        }
+    })
+    pintar(toDo.filter(elem => elem.visible === true));
+}
+
+const inputFilter = document.getElementById('textFilter');
+inputFilter.addEventListener('keyup', filterTxt);
