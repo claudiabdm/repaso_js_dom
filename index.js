@@ -208,17 +208,18 @@ inputFilter.addEventListener('keyup', filterTxt);
 
 
 function filterDays(e) {
-    const input = parseInt(e.currentTarget.value);
+    const input = e.currentTarget.value;
+
     toDo.forEach(elem => {
         const daysLeft = elem.end.diff(moment(), 'days');
-        if (daysLeft <= input) {
+        if (daysLeft <= parseInt(input)) {
             elem.visible = true;
         } else {
             elem.visible = false;
         }
     })
-    input === '' ? pintar(toDo) : pintar(toDo.filter(elem => elem.visible === true));
 
+    input === '' ? pintar(toDo) : pintar(toDo.filter(elem => elem.visible === true));
 }
 
 const daysFilter = document.getElementById('dateFilter');
@@ -231,11 +232,8 @@ function addTodoOnEnter(e) {
         addToDo();
     }
 }
-
 document.getElementById('input').addEventListener('keydown', addTodoOnEnter);
 document.getElementById('date').addEventListener('keydown', addTodoOnEnter);
-document.getElementById('textFilter').addEventListener('keydown', addTodoOnEnter);
-document.getElementById('dateFilter').addEventListener('keydown', addTodoOnEnter);
 
 function saveTodoOnEnter(e) {
     if (e.keyCode === 13) {
