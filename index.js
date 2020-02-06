@@ -2,7 +2,7 @@ var arrTasks = [];
 var toDo = [];
 
 // PAINT LIST
-function pintar() {
+function pintar(arr) {
 
     const ul = document.getElementById('list');
 
@@ -12,7 +12,7 @@ function pintar() {
     }
 
     // paints tasks
-    toDo.forEach(elem => {
+    arr.forEach(elem => {
         const li = document.createElement('li');
         const text = document.createTextNode(` ${elem.text} `);
         const date = document.createTextNode(` ${elem.end.locale('es').format('LL')} `);
@@ -42,7 +42,7 @@ function addToDo() {
         visible: true
     })
 
-    pintar();
+    pintar(toDo);
 }
 
 function addDeleteBtnElement() {
@@ -147,7 +147,7 @@ function sortAbc(e) {
         toDo.sort((a, b) => a.text < b.text);
         abcBtn.textContent = '(A-Z)';
     }
-   pintar()
+    pintar()
 }
 
 const abcBtn = document.getElementById('textOrderAbc');
@@ -162,7 +162,7 @@ function sortDaysLeft(e) {
         toDo.sort((a, b) => b.end - a.end);
         daysLeftBtn.textContent = 'Prioritarios primero';
     }
-   pintar()
+    pintar()
 }
 
 const daysLeftBtn = document.getElementById('textOrderDays');
@@ -172,7 +172,7 @@ daysLeftBtn.addEventListener('click', sortDaysLeft);
 // Default order
 function sortDefault(e) {
     toDo.sort((a, b) => a.id - b.id);
-    pintar() 
+    pintar()
 }
 
 const defaultBtn = document.getElementById('textOrderId');
