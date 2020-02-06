@@ -15,7 +15,7 @@ function pintar(arr) {
         const li = document.createElement('li');
         const text = document.createTextNode(` ${elem.text} `);
         const date = document.createTextNode(` ${elem.end.locale('es').format('LLLL')} `);
-        const days = document.createTextNode(` ${elem.end.diff(moment(), 'minutes')} días`);
+        const days = document.createTextNode(` ${elem.end.diff(moment(), 'days')} días`);
         li.appendChild(text);
         li.appendChild(date);
         li.appendChild(days);
@@ -23,7 +23,7 @@ function pintar(arr) {
         li.appendChild(addDeleteBtnElement());
         li.appendChild(addDoneBtnElement());
         li.classList.add("task");
-        li.setAttribute("data-list-id", elem.id);
+        li.setAttribute("data-list-id", elem.id); // to link dom element and array element
         ul.appendChild(li);
     })
 }
@@ -119,14 +119,11 @@ function saveElement(e) {
     const text = document.createTextNode(inputValue);
     const date = li.childNodes[2];
     const days = li.childNodes[3];
-
-    console.log(text.textContent)
     // Modify elem.text
     const idLi = e.currentTarget.parentElement.getAttribute('data-list-id'); // gets list id from DOM element (see pintar())
     const idxLi = toDo.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
     toDo[idxLi].text = text.textContent; //modify element property text with new input in that index
     // .Modify elem.text
-
     li.insertBefore(text, input);
     li.insertBefore(date, input);
     li.insertBefore(days, input);
@@ -190,10 +187,8 @@ defaultBtn.addEventListener('click', sortDefault);
 function filterTxt(e) {
     const input = e.currentTarget.value;
     toDo.forEach( elem => {
-        const text = elem.text;
-        const regex = new RegExp("^" + input, 'g');
-        console.log(regex)
-        console.log(input)
+        const text = elem.text.replace(/^\s+/g, ''); //remove all white spaces at start
+        const regex = new RegExp(`^${input}`, 'g');
         if(!regex.test(text)) {
             elem.visible = false;
         } else {
