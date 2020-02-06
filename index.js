@@ -195,10 +195,10 @@ inputFilter.addEventListener('keyup', filterTxt);
 
 
 function filterDays(e) {
-    const input = e.currentTarget.value;
+    const input = parseInt(e.currentTarget.value);
     toDo.forEach(elem => {
-        const daysLeft = elem.end.diff(moment(), 'days').toString();
-        if (input === daysLeft) {
+        const daysLeft = elem.end.diff(moment(), 'days');
+        if (daysLeft <= input) {
             elem.visible = true;
         } else {
             elem.visible = false;
