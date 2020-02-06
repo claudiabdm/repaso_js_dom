@@ -88,6 +88,7 @@ function addSaveBtnElement() {
     const saveBtnNode = document.createElement('button');
     saveBtnNode.appendChild(document.createTextNode('Guardar'));
     saveBtnNode.addEventListener('click', saveElement);
+    saveBtnNode.setAttribute('id', 'saveBtn');
     return saveBtnNode;
 }
 
@@ -111,7 +112,8 @@ function editElement(e) {
     const btnEdit = li.childNodes[3];
     const btnSave = addSaveBtnElement();
     const input = document.createElement('input');
-    input.setAttribute("id", "inputEdit");
+    input.setAttribute('id', 'inputEdit');
+    input.addEventListener('keydown', saveTodoOnEnter); // with this input we can press enter to click on guardar
     input.value = liText.textContent;
     li.removeChild(liText);
     li.removeChild(btnEdit);
@@ -234,3 +236,9 @@ document.getElementById('input').addEventListener('keydown', addTodoOnEnter);
 document.getElementById('date').addEventListener('keydown', addTodoOnEnter);
 document.getElementById('textFilter').addEventListener('keydown', addTodoOnEnter);
 document.getElementById('dateFilter').addEventListener('keydown', addTodoOnEnter);
+
+function saveTodoOnEnter(e) {
+    if (e.keyCode === 13) {
+        document.getElementById('saveBtn').click();
+    }
+}
