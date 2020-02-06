@@ -119,6 +119,14 @@ function saveElement(e) {
     const text = document.createTextNode(inputValue);
     const date = li.childNodes[2];
     const days = li.childNodes[3];
+
+    console.log(text.textContent)
+    // Modify elem.text
+    const idLi = e.currentTarget.parentElement.getAttribute('data-list-id'); // gets list id from DOM element (see pintar())
+    const idxLi = toDo.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
+    toDo[idxLi].text = text.textContent; //modify element property text with new input in that index
+    // .Modify elem.text
+
     li.insertBefore(text, input);
     li.insertBefore(date, input);
     li.insertBefore(days, input);
