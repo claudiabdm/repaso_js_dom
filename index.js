@@ -99,7 +99,7 @@ function doneElement(e) {
 function editElement(e) {
     const li = e.target.parentElement;
     const liText = li.childNodes[0];
-    const btnEdit = li.childNodes[1];
+    const btnEdit = li.childNodes[3];
     const btnSave = addSaveBtnElement();
     const input = document.createElement('input');
     input.setAttribute("id", "inputEdit");
@@ -108,6 +108,7 @@ function editElement(e) {
     li.removeChild(btnEdit);
     li.prepend(btnSave);
     li.prepend(input);
+    console.log('childNodes', li.childNodes);
 }
 
 function saveElement(e) {
@@ -117,7 +118,11 @@ function saveElement(e) {
     const btnSave = li.childNodes[1];
     const btnEdit = addEditBtnElement();
     const text = document.createTextNode(inputValue);
+    const date = li.childNodes[2];
+    const days = li.childNodes[3];
     li.insertBefore(text, input);
+    li.insertBefore(date, input);
+    li.insertBefore(days, input);
     li.removeChild(input);
     li.insertBefore(btnEdit, btnSave);
     li.removeChild(btnSave);
