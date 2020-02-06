@@ -28,21 +28,32 @@ function pintar(arr) {
     })
 }
 
+// CHECK INPUT
+function checkInput(inputValue) {
+    if (inputValue === '') {
+        alert('Empty input, please write a task.');
+        return false;
+    }
+    return true;
+}
+
 // BUTTONS TASK ACTIONS
 function addToDo() {
     const input = document.getElementById('input');
     const endDate = new Date(document.getElementById('date').value);
     const nameTask = input.value;
 
-    // add task obj to TODO array
-    toDo.push({
-        id: toDo.length,
-        text: nameTask,
-        end: moment(endDate),
-        visible: true
-    })
+    if (checkInput(input.value)) {
+        // add task obj to TODO array
+        toDo.push({
+            id: toDo.length,
+            text: nameTask,
+            end: moment(endDate),
+            visible: true
+        })
 
-    pintar(toDo);
+        pintar(toDo);
+    }
 }
 
 function addDeleteBtnElement() {
@@ -76,9 +87,7 @@ function addDoneBtnElement() {
 function addSaveBtnElement() {
     const saveBtnNode = document.createElement('button');
     saveBtnNode.appendChild(document.createTextNode('Guardar'));
-    saveBtnNode.addEventListener('click', saveElement, {
-        once: true
-    });
+    saveBtnNode.addEventListener('click', saveElement);
     return saveBtnNode;
 }
 
@@ -119,17 +128,19 @@ function saveElement(e) {
     const text = document.createTextNode(inputValue);
     const date = li.childNodes[2];
     const days = li.childNodes[3];
-    // Modify elem.text
-    const idLi = e.currentTarget.parentElement.getAttribute('data-list-id'); // gets list id from DOM element (see pintar())
-    const idxLi = toDo.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
-    toDo[idxLi].text = text.textContent; //modify element property text with new input in that index
-    // .Modify elem.text
-    li.insertBefore(text, input);
-    li.insertBefore(date, input);
-    li.insertBefore(days, input);
-    li.removeChild(input);
-    li.insertBefore(btnEdit, btnSave);
-    li.removeChild(btnSave);
+    if (checkInput(input.value)) {
+        // Modify elem.text
+        const idLi = e.currentTarget.parentElement.getAttribute('data-list-id'); // gets list id from DOM element (see pintar())
+        const idxLi = toDo.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
+        toDo[idxLi].text = text.textContent; //modify element property text with new input in that index
+        // .Modify elem.text
+        li.insertBefore(text, input);
+        li.insertBefore(date, input);
+        li.insertBefore(days, input);
+        li.removeChild(input);
+        li.insertBefore(btnEdit, btnSave);
+        li.removeChild(btnSave);
+    }
 }
 
 // BUTTONS SORT TASK
