@@ -297,9 +297,3 @@ function saveTodoOnEnter(e) {
         document.getElementById('saveBtn').click();
     }
 }
-
-
-// LOG EVENTS
-const log = {
-    lastSort: '',
-}
