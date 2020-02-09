@@ -1,21 +1,24 @@
-// var arrTasks = []; Esto era para la Iteración 1
-var toDo = [];
-const ul = document.getElementById('list');
+// CHECK INPUT
+function checkInput(inputElement) {
+    if (inputElement.value === '') {
+        alert('Empty input, please write a task.');
+        return false;
+    }
+    return true;
+}
 
-// PAINT LIST
-function pintar(arr) {
+// PAINT IN HTML
+function pintar(ulElement, tasks) {
 
-    // makes ul list empty by deleting children
-    while (ul.firstChild) {
-        ul.removeChild(ul.firstChild);
+    while (ulElement.firstChild) {
+        ulElement.removeChild(ulElement.firstChild);
     }
 
-    // paints tasks
-    arr.forEach(elem => {
+    tasks.forEach(elem => {
         const li = document.createElement('li');
-        const text = document.createTextNode(` ${elem.text} `);
-        const date = document.createTextNode(` ${elem.end.locale('es').format('LLLL')} `);
-        const days = document.createTextNode(` ${elem.end.diff(moment(), 'days')} días`);
+        const text = document.createTextNode(` ${elem.text}`);
+        const date = document.createTextNode(` ${elem.end.locale('es').format('dddd')}, ${elem.end.locale('es').format('D')} de ${elem.end.locale('es').format('MMMM')} de ${elem.end.locale('es').format('YYYY')}`);
+        const days = document.createTextNode(` ${elem.end.diff(moment(), 'days') + 1} días `);
         li.appendChild(text);
         li.appendChild(date);
         li.appendChild(days);
@@ -24,38 +27,30 @@ function pintar(arr) {
         li.appendChild(addDoneBtnElement());
         li.classList.add("task");
         li.setAttribute("data-list-id", elem.id); // to link dom element and array element
-        ul.appendChild(li);
+        ulElement.appendChild(li);
     })
 }
 
-// CHECK INPUT
-function checkInput(inputValue) {
-    if (inputValue === '') {
-        alert('Empty input, please write a task.');
-        return false;
-    }
-    return true;
-}
+// ADD TO ARRAY
+function addToDo(tasks, inputElement, inputDate, ulElement) {
 
-// BUTTONS TASK ACTIONS
-function addToDo() {
-    const input = document.getElementById('input');
-    const endDate = new Date(document.getElementById('date').value);
-    const nameTask = input.value;
-
-    if (checkInput(input.value)) {
-        // add task obj to TODO array
-        toDo.push({
-            id: toDo.length,
-            text: nameTask,
-            end: moment(endDate),
+    if(checkInput(inputElement)){
+        console.log(inputElement)
+        const text = inputElement.value;
+        const date = new Date(inputDate.value);
+    
+        tasks.push({
+            id: tasks.length,
+            text: text,
+            end: moment(date),
             visible: true
         })
-
-        pintar(toDo);
+    
+        pintar(ulElement, tasks);
     }
 }
 
+// MODIFY TASK BUTTONS 
 function addDeleteBtnElement() {
     const deleteNode = document.createElement('button');
     deleteNode.appendChild(document.createTextNode('Borrar'));
@@ -95,8 +90,8 @@ function addSaveBtnElement() {
 function deleteElement(e) {
     // Remove from array
     const idLi = e.currentTarget.parentElement.getAttribute('data-list-id'); // gets list id from DOM element (see pintar())
-    const idxLi = toDo.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
-    toDo.splice(idxLi, 1); //remove element in that index
+    const idxLi = tasks.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
+    tasks.splice(idxLi, 1); //remove element in that index
     // Remove from DOM
     list.removeChild(e.currentTarget.parentElement);
 }
@@ -130,11 +125,11 @@ function saveElement(e) {
     const text = document.createTextNode(inputValue);
     const date = li.childNodes[2];
     const days = li.childNodes[3];
-    if (checkInput(input.value)) {
+    if (checkInput(input)) {
         // Modify elem.text
         const idLi = e.currentTarget.parentElement.getAttribute('data-list-id'); // gets list id from DOM element (see pintar())
-        const idxLi = toDo.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
-        toDo[idxLi].text = text.textContent; //modify element property text with new input in that index
+        const idxLi = tasks.findIndex(elem => elem.id.toString() === idLi); // find index in toDo array where IDs from array obj (elem.id) and dom elem (liId) are the same
+        tasks[idxLi].text = text.textContent; //modify element property text with new input in that index
         // .Modify elem.text
         li.insertBefore(text, input);
         li.insertBefore(date, input);
@@ -147,16 +142,17 @@ function saveElement(e) {
 
 // BUTTONS SORT TASK
 
+
 // Alphabetic order
 function sortAbc(e) {
     if (abcBtn.textContent === '(A-Z)') {
-        toDo.sort((a, b) => a.text > b.text);
+        tasks.sort((a, b) => a.text > b.text);
         abcBtn.textContent = '(Z-A)';
     } else {
-        toDo.sort((a, b) => a.text < b.text);
+        tasks.sort((a, b) => a.text < b.text);
         abcBtn.textContent = '(A-Z)';
     }
-    pintar(toDo)
+    pintar(ulElement, tasks)
 }
 
 const abcBtn = document.getElementById('textOrderAbc');
@@ -165,13 +161,13 @@ abcBtn.addEventListener('click', sortAbc);
 // Days left order
 function sortDaysLeft(e) {
     if (daysLeftBtn.textContent === 'Prioritarios primero') {
-        toDo.sort((a, b) => a.end - b.end);
+        tasks.sort((a, b) => a.end - b.end);
         daysLeftBtn.textContent = 'Prioritarios después';
     } else {
-        toDo.sort((a, b) => b.end - a.end);
+        tasks.sort((a, b) => b.end - a.end);
         daysLeftBtn.textContent = 'Prioritarios primero';
     }
-    pintar(toDo)
+    pintar(ulElement, tasks)
 }
 
 const daysLeftBtn = document.getElementById('textOrderDays');
@@ -180,8 +176,8 @@ daysLeftBtn.addEventListener('click', sortDaysLeft);
 
 // Default order
 function sortDefault(e) {
-    toDo.sort((a, b) => a.id - b.id);
-    pintar(toDo)
+    tasks.sort((a, b) => a.id - b.id);
+    pintar(ulElement, tasks)
 }
 
 const defaultBtn = document.getElementById('textOrderId');
@@ -191,7 +187,7 @@ defaultBtn.addEventListener('click', sortDefault);
 
 function filterTxt(e) {
     const input = e.currentTarget.value;
-    toDo.forEach(elem => {
+    tasks.forEach(elem => {
         const text = elem.text.replace(/^\s+/g, ''); //remove all white spaces at start
         const regex = new RegExp(`^${input}`, 'g');
         if (!regex.test(text)) {
@@ -200,7 +196,7 @@ function filterTxt(e) {
             elem.visible = true;
         }
     })
-    pintar(toDo.filter(elem => elem.visible === true));
+    pintar(ulElement, tasks.filter (elem => elem.visible === true));
 }
 
 const inputFilter = document.getElementById('textFilter');
@@ -210,16 +206,16 @@ inputFilter.addEventListener('keyup', filterTxt);
 function filterDays(e) {
     const input = e.currentTarget.value;
 
-    toDo.forEach(elem => {
+    tasks.forEach(elem => {
         const daysLeft = elem.end.diff(moment(), 'days');
-        if (daysLeft <= parseInt(input)) {
+        if (daysLeft < parseInt(input)) {
             elem.visible = true;
         } else {
             elem.visible = false;
         }
     })
 
-    input === '' ? pintar(toDo) : pintar(toDo.filter(elem => elem.visible === true));
+    input === '' ? pintar(ulElement, tasks) : pintar(ulElement, tasks.filter(elem => elem.visible === true));
 }
 
 const daysFilter = document.getElementById('dateFilter');
@@ -229,11 +225,13 @@ daysFilter.addEventListener('keyup', filterDays);
 
 function addTodoOnEnter(e) {
     if (e.keyCode === 13) {
-        addToDo();
+        addToDo(tasks, inputElement, inputDate, ulElement);
+        document.getElementById('input').value= '';
     }
 }
-document.getElementById('input').addEventListener('keydown', addTodoOnEnter);
-document.getElementById('date').addEventListener('keydown', addTodoOnEnter);
+
+inputElement.addEventListener('keydown', addTodoOnEnter);
+inputDate.addEventListener('keydown', addTodoOnEnter);
 
 function saveTodoOnEnter(e) {
     if (e.keyCode === 13) {

@@ -1,17 +1,17 @@
 describe('index-clase.js', function () {
 
   beforeEach(function () {
-   /* const ul = document.createElement('ul');
-    ul.id = 'list';
-    const input = document.createElement('input');
-    input.id = 'input';
-    const addButton = document.createElement('button');
-    addButton.id = 'addButton';
+    /* const ul = document.createElement('ul');
+     ul.id = 'list';
+     const input = document.createElement('input');
+     input.id = 'input';
+     const addButton = document.createElement('button');
+     addButton.id = 'addButton';
 
-    document.append(ul)
-    document.append(input)
-    document.appendC(addButton)
-    */
+     document.append(ul)
+     document.append(input)
+     document.appendC(addButton)
+     */
   })
 
   describe("pintar", function () {
@@ -41,15 +41,16 @@ describe('index-clase.js', function () {
       const tasks = [{
         id: 0,
         text: 'Hola',
-        end: new Date(),
+        end: moment(new Date("2020-02-10")),
         visible: true
       }];
-
+      debugger
       pintar(dummyElement, tasks);
 
       //Condición final
       expect(dummyElement.innerHTML).not.toEqual('');
-      expect(dummyElement.innerHTML).not.toEqual(`<li class="task">Hola</li>`);
+      expect(dummyElement.innerHTML).toEqual(`<li class="task" data-list-id="0"> Hola lunes, 10 de febrero de 2020 1 días </li>`);
+
     });
 
 
@@ -63,10 +64,12 @@ describe('index-clase.js', function () {
       //Condicion inicial
       const tasks = [];
       const inputElement = document.createElement('input');
-      inputElement.value =  'Hola';
+      inputElement.value = 'Hola';
+      const inputDate = document.createElement('input');
+      inputElement.value = new Date("2020-02-10");
       const ulElement = document.createElement('ul');
 
-      addToDo(tasks, inputElement, ulElement);
+      addToDo(tasks, inputElement, inputDate, ulElement);
 
       //Condición final
       expect(tasks.length).toEqual(1);
