@@ -33,6 +33,10 @@ function sortDaysMore(tasks) {
     tasks.sort((a, b) => b.end - a.end);
 }
 
+function sortDefaultArr(tasks) {
+    tasks.sort((a, b) => a.id - b.id);
+}
+
 // PAINT IN HTML
 function pintar(ulElement, tasks) {
 
@@ -54,6 +58,9 @@ function pintar(ulElement, tasks) {
             break;
         case 'sortDaysMore':
             sortDaysMore(tasks);
+            break;
+        case 'sortDefault':
+            sortDefaultArr(tasks);
             break;
         default:
             break;
@@ -230,8 +237,9 @@ daysLeftBtn.addEventListener('click', sortDaysLeft);
 
 // Default order
 function sortDefault(e) {
-    tasks.sort((a, b) => a.id - b.id);
-    pintar(ulElement, tasks)
+    sortDefaultArr(tasks);
+    log.lastSort = 'sortDefault';
+    pintar(ulElement, tasks);
 }
 
 const defaultBtn = document.getElementById('textOrderId');
