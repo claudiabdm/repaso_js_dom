@@ -18,24 +18,29 @@ function checkInputDate(inputDate) {
 // PAINT IN HTML
 function pintar(ulElement, tasks) {
 
+    // remove all children from ul dom element
     while (ulElement.firstChild) {
         ulElement.removeChild(ulElement.firstChild);
     }
 
     tasks.forEach(elem => {
-        const li = document.createElement('li');
-        const text = document.createTextNode(` ${elem.text}`);
-        const date = document.createTextNode(` ${elem.end.locale('es').format('dddd')}, ${elem.end.locale('es').format('D')} de ${elem.end.locale('es').format('MMMM')} de ${elem.end.locale('es').format('YYYY')}`);
-        const days = document.createTextNode(` ${elem.end.diff(moment(), 'days') + 1} días `);
-        li.appendChild(text);
-        li.appendChild(date);
-        li.appendChild(days);
-        li.appendChild(addEditBtnElement());
-        li.appendChild(addDeleteBtnElement());
-        li.appendChild(addDoneBtnElement());
-        li.classList.add("task");
-        li.setAttribute("data-list-id", elem.id); // to link dom element and array element
-        ulElement.appendChild(li);
+
+        // paint only if elem is visible
+        if (elem.visible === true) {
+            const li = document.createElement('li');
+            const text = document.createTextNode(` ${elem.text}`);
+            const date = document.createTextNode(` ${elem.end.locale('es').format('dddd')}, ${elem.end.locale('es').format('D')} de ${elem.end.locale('es').format('MMMM')} de ${elem.end.locale('es').format('YYYY')}`);
+            const days = document.createTextNode(` ${elem.end.diff(moment(), 'days') + 1} días `);
+            li.appendChild(text);
+            li.appendChild(date);
+            li.appendChild(days);
+            li.appendChild(addEditBtnElement());
+            li.appendChild(addDeleteBtnElement());
+            li.appendChild(addDoneBtnElement());
+            li.classList.add("task");
+            li.setAttribute("data-list-id", elem.id); // to link dom element and array element
+            ulElement.appendChild(li);
+        }
     })
 }
 
