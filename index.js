@@ -17,12 +17,20 @@ function checkInputDate(inputDate) {
 
 // SORT ARRAY
 
-function sortAbcArr() {
+function sortAbcArr(tasks) {
     tasks.sort((a, b) => a.text > b.text);
 }
 
-function sortCbaArr() {
+function sortCbaArr(tasks) {
     tasks.sort((a, b) => a.text < b.text);
+}
+
+function sortDaysLess(tasks) {
+    tasks.sort((a, b) => a.end - b.end);
+}
+
+function sortDaysMore(tasks) {
+    tasks.sort((a, b) => b.end - a.end);
 }
 
 // PAINT IN HTML
@@ -36,10 +44,17 @@ function pintar(ulElement, tasks) {
     // sort array by the last sorting function used
     switch (log.lastSort) {
         case 'sortAbcArr':
-            sortAbcArr();
+            sortAbcArr(tasks);
             break;
         case 'sortCbaArr':
-            sortCbaArr();
+            sortCbaArr(tasks);
+            break;
+        case 'sortDaysLess':
+            sortDaysLess(tasks);
+            break;
+        case 'sortDaysMore':
+            sortDaysMore(tasks);
+            break;
         default:
             break;
     }
@@ -183,10 +198,9 @@ function sortAbc(e) {
         log.lastSort = 'sortAbcArr';
         abcBtn.textContent = '(Z-A)';
     } else {
-        sortCbaArr(tasks)
+        sortCbaArr(tasks);
         log.lastSort = 'sortCbaArr';
         abcBtn.textContent = '(A-Z)';
-
     }
 
     pintar(ulElement, tasks)
@@ -196,12 +210,14 @@ const abcBtn = document.getElementById('textOrderAbc');
 abcBtn.addEventListener('click', sortAbc);
 
 // Days left order
-function sortDaysLeft() {
+function sortDaysLeft(e) {
     if (daysLeftBtn.textContent === 'Prioritarios primero') {
-        tasks.sort((a, b) => a.end - b.end);
+        sortDaysLess(tasks);
+        log.lastSort = 'sortDaysLess';
         daysLeftBtn.textContent = 'Prioritarios después';
     } else {
-        tasks.sort((a, b) => b.end - a.end);
+        sortDaysMore(tasks);
+        log.lastSort = 'sortDaysMore';
         daysLeftBtn.textContent = 'Prioritarios primero';
     }
 
