@@ -15,12 +15,33 @@ function checkInputDate(inputDate) {
     return true;
 }
 
+// SORT ARRAY
+
+function sortAbcArr() {
+    tasks.sort((a, b) => a.text > b.text);
+}
+
+function sortCbaArr() {
+    tasks.sort((a, b) => a.text < b.text);
+}
+
 // PAINT IN HTML
 function pintar(ulElement, tasks) {
 
     // remove all children from ul dom element
     while (ulElement.firstChild) {
         ulElement.removeChild(ulElement.firstChild);
+    }
+
+    // sort array by the last sorting function used
+    switch (log.lastSort) {
+        case 'sortAbcArr':
+            sortAbcArr();
+            break;
+        case 'sortCbaArr':
+            sortCbaArr();
+        default:
+            break;
     }
 
     tasks.forEach(elem => {
@@ -47,17 +68,17 @@ function pintar(ulElement, tasks) {
 // ADD TO ARRAY
 function addToDo(tasks, inputElement, inputDate, ulElement) {
 
-    if(checkInput(inputElement) && checkInputDate(inputDate)){
+    if (checkInput(inputElement) && checkInputDate(inputDate)) {
         const text = inputElement.value;
         const date = new Date(inputDate.value);
-    
+
         tasks.push({
             id: tasks.length,
             text: text,
             end: moment(date),
             visible: true
         })
-    
+
         pintar(ulElement, tasks);
     }
 }
@@ -158,12 +179,16 @@ function saveElement(e) {
 // Alphabetic order
 function sortAbc(e) {
     if (abcBtn.textContent === '(A-Z)') {
-        tasks.sort((a, b) => a.text > b.text);
+        sortAbcArr(tasks);
+        log.lastSort = 'sortAbcArr';
         abcBtn.textContent = '(Z-A)';
     } else {
-        tasks.sort((a, b) => a.text < b.text);
+        sortCbaArr(tasks)
+        log.lastSort = 'sortCbaArr';
         abcBtn.textContent = '(A-Z)';
+
     }
+
     pintar(ulElement, tasks)
 }
 
@@ -171,7 +196,7 @@ const abcBtn = document.getElementById('textOrderAbc');
 abcBtn.addEventListener('click', sortAbc);
 
 // Days left order
-function sortDaysLeft(e) {
+function sortDaysLeft() {
     if (daysLeftBtn.textContent === 'Prioritarios primero') {
         tasks.sort((a, b) => a.end - b.end);
         daysLeftBtn.textContent = 'Prioritarios después';
@@ -179,6 +204,7 @@ function sortDaysLeft(e) {
         tasks.sort((a, b) => b.end - a.end);
         daysLeftBtn.textContent = 'Prioritarios primero';
     }
+
     pintar(ulElement, tasks)
 }
 
@@ -208,7 +234,7 @@ function filterTxt(e) {
             elem.visible = true;
         }
     })
-    pintar(ulElement, tasks.filter (elem => elem.visible === true));
+    pintar(ulElement, tasks);
 }
 
 const inputFilter = document.getElementById('textFilter');
@@ -218,16 +244,21 @@ inputFilter.addEventListener('keyup', filterTxt);
 function filterDays(e) {
     const input = e.currentTarget.value;
 
-    tasks.forEach(elem => {
-        const daysLeft = elem.end.diff(moment(), 'days');
-        if (daysLeft < parseInt(input)) {
-            elem.visible = true;
-        } else {
-            elem.visible = false;
-        }
-    })
+    // if input for days is empty, make all li visible, if not then show elements that meet the condition
+    if (input === '') {
+        tasks.map(elem => elem.visible = true);
+    } else {
+        tasks.forEach(elem => {
+            const daysLeft = elem.end.diff(moment(), 'days');
+            if (daysLeft < parseInt(input)) {
+                elem.visible = true;
+            } else {
+                elem.visible = false;
+            }
+        })
+    }
 
-    input === '' ? pintar(ulElement, tasks) : pintar(ulElement, tasks.filter(elem => elem.visible === true));
+    pintar(ulElement, tasks);
 }
 
 const daysFilter = document.getElementById('dateFilter');
@@ -238,7 +269,7 @@ daysFilter.addEventListener('keyup', filterDays);
 function addTodoOnEnter(e) {
     if (e.keyCode === 13) {
         addToDo(tasks, inputElement, inputDate, ulElement);
-        document.getElementById('input').value= '';
+        document.getElementById('input').value = '';
     }
 }
 
@@ -249,4 +280,10 @@ function saveTodoOnEnter(e) {
     if (e.keyCode === 13) {
         document.getElementById('saveBtn').click();
     }
+}
+
+
+// LOG EVENTS
+const log = {
+    lastSort: '',
 }
