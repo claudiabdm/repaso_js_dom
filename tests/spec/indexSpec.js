@@ -49,7 +49,7 @@ describe('index-clase.js', function () {
 
       //Condición final
       expect(dummyElement.innerHTML).not.toEqual('');
-      expect(dummyElement.innerHTML).toEqual(`<li class="task" data-list-id="0"> Hola lunes, 10 de febrero de 2020 1 días </li>`);
+      expect(dummyElement.innerHTML).toEqual(`<li class="task" data-list-id="0"> Hola lunes, 10 de febrero de 2020 1 días <button>Borrar</button></li>`);
 
     });
 

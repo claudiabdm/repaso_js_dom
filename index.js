@@ -7,6 +7,14 @@ function checkInput(inputElement) {
     return true;
 }
 
+function checkInputDate(inputDate) {
+    if (inputDate.value === '') {
+        alert('Empty date, please select a date.');
+        return false;
+    }
+    return true;
+}
+
 // PAINT IN HTML
 function pintar(ulElement, tasks) {
 
@@ -34,8 +42,7 @@ function pintar(ulElement, tasks) {
 // ADD TO ARRAY
 function addToDo(tasks, inputElement, inputDate, ulElement) {
 
-    if(checkInput(inputElement)){
-        console.log(inputElement)
+    if(checkInput(inputElement) && checkInputDate(inputDate)){
         const text = inputElement.value;
         const date = new Date(inputDate.value);
     
